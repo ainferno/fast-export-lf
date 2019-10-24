@@ -201,8 +201,13 @@ def export_file_contents(ctx,manifest,files,hgtags,encoding='',plugins={}):
       sys.stderr.write("Detected large file: " + filename + "\n")
       filename = filename[5:]
       lfsFileCached = lfutil.findfile(ctx.repo(), d.strip('\n'))
-      with open(lfsFileCached, 'r') as lfile:
-        d = lfile.read()
+
+      if lfsFileCached == None:
+        sys.stderr.write("ERROR, CAN't FIND FILE: " + filename)
+      else:
+        with open(lfsFileCached, 'r') as lfile:
+          d = lfile.read()
+
 
     if plugins and plugins['file_data_filters']:
       file_data = {'filename':filename,'file_ctx':file_ctx,'data':d}
