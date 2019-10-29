@@ -203,7 +203,9 @@ def export_file_contents(ctx,manifest,files,hgtags,encoding='',plugins={}):
       lfsFileCached = lfutil.findfile(ctx.repo(), d.strip('\n'))
 
       if lfsFileCached == None:
-        sys.stderr.write("ERROR, CAN't FIND FILE: " + filename)
+        sys.stderr.write("ERROR, CAN't FIND FILE: " + filename + "\n")
+      elif os.path.isdir(lfsFileCached):
+        sys.stderr.write("ERROR, FOUND DIRECTORY: " + filename + "\n")
       else:
         with open(lfsFileCached, 'r') as lfile:
           d = lfile.read()
