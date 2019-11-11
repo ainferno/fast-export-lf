@@ -200,6 +200,11 @@ def export_file_contents(ctx,manifest,files,hgtags,encoding='',plugins={}):
     if filename[:5] == ".hglf":
       sys.stderr.write("Detected large file: " + filename + "\n")
       filename = filename[5:]
+
+      f=open("../GITATTRIBUTES.txt", "a+")
+      f.write(filename + "\n")
+      f.close()
+
       lfsFileCached = lfutil.findfile(ctx.repo(), d.strip('\n'))
 
       if lfsFileCached == None:
