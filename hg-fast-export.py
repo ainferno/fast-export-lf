@@ -197,25 +197,23 @@ def export_file_contents(ctx,manifest,files,hgtags,encoding='',plugins={}):
     file_ctx=ctx.filectx(file)
     d=file_ctx.data()
 
-    if filename[:5] == ".hglf":
+    f=open("../large_files.txt", "a+")
+    if os.path.exists(filename) and os.path.getsize(filename) >= 10000000:
       sys.stderr.write("Detected large file: " + filename + "\n")
-      filename = filename[5:]
-
-      f=open("../GITATTRIBUTES.txt", "a+")
       f.write(filename + "\n")
-      f.close()
+
+    if filename[:5] == ".hglf":
+      
+      filename = filename[5:]
+      f.write(filename + "\n")
 
       lfsFileCached = lfutil.findfile(ctx.repo(), d.strip('\n'))
 
-      if lfsFileCached == None:
-        sys.stderr.write("ERROR, CAN't FIND FILE: " + filename + "\n")
-      elif os.path.isdir(lfsFileCached):
-        sys.stderr.write("ERROR, FOUND DIRECTORY: " + filename + "\n")
-      else:
+      if lfsFileCached != None and not os.path.isdir(lfsFileCached):
         with open(lfsFileCached, 'r') as lfile:
           d = lfile.read()
 
-
+    f.close()
     if plugins and plugins['file_data_filters']:
       file_data = {'filename':filename,'file_ctx':file_ctx,'data':d}
       for filter in plugins['file_data_filters']:
