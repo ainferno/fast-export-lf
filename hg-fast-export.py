@@ -189,6 +189,9 @@ def export_file_contents(ctx,manifest,files,hgtags,encoding='',plugins={}):
     if not hgtags and file == ".hgtags":
       sys.stderr.write('Skip %s\n' % (file))
       continue
+    if ".git" in file:
+      sys.stderr.write('Skip %s\n' % (file))
+      continue
     if encoding:
       filename=file.decode(encoding).encode('utf8')
     else:
